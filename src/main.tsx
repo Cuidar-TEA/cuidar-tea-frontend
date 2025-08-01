@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import DashboardPage from './pages/DashboardPage';
 import CadastroPage from './pages/CadastroPage';
 import ProfissionalPage from './pages/ProfissionalPage/ProfissionalPage';
+import PesquisaProfissionalPage from './pages/PesquisaProfissionalPage/PesquisaProfissionalPage';
 
 function App() {
   return (
@@ -13,9 +14,8 @@ function App() {
         <Route path="/cadastro" element={<CadastroPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/ProfissionalPage" element={<ProfissionalPage />} />
-        {/* Temporariamente redirecionando para /ProfissionalPage */}
-        <Route path="/" element={<Navigate to="/ProfissionalPage" replace />} />
-        <Route path="*" element={<Navigate to="/ProfissionalPage" replace />} />
+        {/* Temporariamente redirecionando para /PesquisaProfissionalPage */}
+        <Route path="/" element={<PesquisaProfissionalPage />} />
       </Routes>
     </Router>
   );

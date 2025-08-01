@@ -1,4 +1,3 @@
-import React from 'react';
 import Navbar from '../components/layout/Navbar';
 import FeaturedProfessionals from '../components/dashboard/FeaturedProfissional';
 import SearchProfessionals from '../components/dashboard/Pesquisa';

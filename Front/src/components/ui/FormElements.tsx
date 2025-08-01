@@ -1,5 +1,3 @@
-import React from 'react';
-
 export const Input = (props: any) => (
   <div className="w-full">
     <label htmlFor={props.name} className="block text-sm font-medium text-gray-700 mb-1">

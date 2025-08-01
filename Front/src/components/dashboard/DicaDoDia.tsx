@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function TipOfTheDay() {
     return (
         <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg shadow-md h-full">

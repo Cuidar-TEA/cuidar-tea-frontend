@@ -45,6 +45,8 @@ const BlocoFiltroProfissionais: React.FC = () => {
     };
 
     const aplicarFiltros = () => {
+        console.log('=== BOTÃO APLICAR FILTROS CLICADO ===');
+        console.log('Estado atual do formulário:', formData);
         aplicarFiltrosHook(formData);
     };
 

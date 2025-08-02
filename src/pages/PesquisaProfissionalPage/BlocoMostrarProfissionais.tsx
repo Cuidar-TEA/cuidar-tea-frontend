@@ -49,67 +49,85 @@ const BlocoMostrarProfissionais: React.FC = () => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-2 gap-4">
-                        {profissionais.map((profissional) => (
-                            <div key={profissional.id} className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors duration-200 cursor-pointer border border-gray-200">
-                                <div className="flex items-start space-x-3">
-                                    {/* Foto do Profissional */}
-                                    <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
-                                        <img 
-                                            src={profissional.foto} 
-                                            alt={profissional.nome}
-                                            className="w-full h-full object-cover"
-                                            onError={(e) => {
-                                                e.currentTarget.src = '/api/placeholder/48/48';
-                                            }}
-                                        />
-                                    </div>
+                        {profissionais.map((profissional) => {
+                            // Calcula a avaliação média dos agendamentos
+                            const avaliacoes = profissional.agendamentos
+                                .map(ag => ag.nota_atendimento)
+                                .filter(nota => nota !== undefined) as number[];
+                            const avaliacaoMedia = avaliacoes.length > 0 
+                                ? avaliacoes.reduce((acc, nota) => acc + nota, 0) / avaliacoes.length 
+                                : 0;
 
-                                    {/* Informações do Profissional */}
-                                    <div className="flex-1 min-w-0">
-                                        <h3 className="text-sm font-semibold text-gray-900 truncate mb-1">
-                                            {profissional.nome}
-                                        </h3>
-                                        <p className="text-xs text-gray-600 mb-2 truncate">
-                                            {profissional.especialidade}
-                                        </p>
-                                        
-                                        {/* Avaliação */}
-                                        <div className="flex items-center mb-2">
-                                            <FaStar className="text-yellow-500 mr-1" size={12} />
-                                            <span className="text-xs font-medium mr-1">{profissional.avaliacao}</span>
-                                            <span className="text-xs text-gray-500">({profissional.totalAvaliacoes})</span>
+                            // Pega as primeiras 3 especialidades
+                            const especialidades = profissional.profissional_especialidades
+                                .slice(0, 3)
+                                .map(pe => pe.especialidades.nome_especialidade);
+
+                            return (
+                                <div key={profissional.id_profissional} className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors duration-200 cursor-pointer border border-gray-200">
+                                    <div className="flex items-start space-x-3">
+                                        {/* Foto do Profissional */}
+                                        <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+                                            <img 
+                                                src={profissional.foto_perfil_url || '/api/placeholder/48/48'} 
+                                                alt={profissional.nome}
+                                                className="w-full h-full object-cover"
+                                                onError={(e) => {
+                                                    e.currentTarget.src = '/api/placeholder/48/48';
+                                                }}
+                                            />
                                         </div>
 
-                                        {/* 3 Tags de Especialidades */}
-                                        <div className="flex flex-wrap gap-1 mb-2">
-                                            {profissional.especialidades?.slice(0, 3).map((especialidade, index) => (
-                                                <span key={index} className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                                                    {especialidade}
+                                        {/* Informações do Profissional */}
+                                        <div className="flex-1 min-w-0">
+                                            <h3 className="text-sm font-semibold text-gray-900 truncate mb-1">
+                                                {profissional.nome}
+                                            </h3>
+                                            <p className="text-xs text-gray-600 mb-2 truncate">
+                                                {profissional.tipo_registro} {profissional.numero_registro}
+                                            </p>
+                                            
+                                            {/* Avaliação */}
+                                            <div className="flex items-center mb-2">
+                                                <FaStar className="text-yellow-500 mr-1" size={12} />
+                                                <span className="text-xs font-medium mr-1">
+                                                    {avaliacaoMedia > 0 ? avaliacaoMedia.toFixed(1) : 'Sem avaliações'}
                                                 </span>
-                                            ))}
-                                        </div>
+                                                <span className="text-xs text-gray-500">({avaliacoes.length})</span>
+                                            </div>
 
-                                        {/* Preço */}
-                                        <div className="text-right">
-                                            <span className="text-sm font-bold text-gray-900">
-                                                R$ {profissional.preco}
-                                            </span>
-                                            <span className="text-xs text-gray-500 ml-1">por consulta</span>
-                                        </div>
+                                            {/* 3 Tags de Especialidades */}
+                                            <div className="flex flex-wrap gap-1 mb-2">
+                                                {especialidades.map((especialidade, index) => (
+                                                    <span key={index} className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                                                        {especialidade}
+                                                    </span>
+                                                ))}
+                                            </div>
 
-                                        {/* Informações adicionais */}
-                                        <div className="text-xs text-gray-500 mt-1">
-                                            {profissional.cidade && profissional.estado && (
-                                                <span>{profissional.cidade}, {profissional.estado}</span>
-                                            )}
-                                            {profissional.aceitaConvenio && (
-                                                <span className="ml-2 text-green-600">• Aceita convênio</span>
-                                            )}
+                                            {/* Preço */}
+                                            <div className="text-right">
+                                                <span className="text-sm font-bold text-gray-900">
+                                                    R$ {profissional.valor_consulta}
+                                                </span>
+                                                <span className="text-xs text-gray-500 ml-1">por consulta</span>
+                                            </div>
+
+                                            {/* Informações adicionais */}
+                                            <div className="text-xs text-gray-500 mt-1">
+                                                <span>{profissional.enderecos.cidade}, {profissional.enderecos.estado}</span>
+                                                {profissional.aceita_convenio && (
+                                                    <span className="ml-2 text-green-600">• Aceita convênio</span>
+                                                )}
+                                                {profissional.atende_domicilio === 1 && (
+                                                    <span className="ml-2 text-blue-600">• Atende domicílio</span>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 )}
             </div>

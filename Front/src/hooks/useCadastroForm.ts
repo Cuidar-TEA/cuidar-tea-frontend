@@ -4,7 +4,6 @@ import { cpf as cpfValidator } from 'cpf-cnpj-validator';
 import axios from 'axios';
 import api from '../services/api';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
 
 const familiaSchema = z.object({
   nomeCompleto: z.string().min(3, "Nome deve ter no mínimo 3 caracteres."),
@@ -48,7 +47,6 @@ export function useCadastroForm(initialState: FormData) {
   const [errors, setErrors] = useState<ErrorData>({});
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const cep = formData.cep.replace(/\D/g, '');

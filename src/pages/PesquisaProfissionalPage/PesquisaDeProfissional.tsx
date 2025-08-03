@@ -1,15 +1,21 @@
 import React from "react";
 import { FaSearch } from "react-icons/fa";
-
-
-
+import { useProfissionaisContext } from "../../contexts/ProfissionaisContext";
 
 const PesquisaDeProfissional: React.FC = () => {
     const [termoPesquisa, setTermoPesquisa] = React.useState("");
+    const { buscarPorNome } = useProfissionaisContext();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        setTermoPesquisa("");
+        
+        // Se há termo de pesquisa, busca por nome
+        if (termoPesquisa.trim()) {
+            buscarPorNome(termoPesquisa.trim());
+        } else {
+            // Se não há termo, busca todos os profissionais
+            buscarPorNome("");
+        }
     }
     return(
         <div className="w-full max-w-4xl mx-auto p-4 mt-10">

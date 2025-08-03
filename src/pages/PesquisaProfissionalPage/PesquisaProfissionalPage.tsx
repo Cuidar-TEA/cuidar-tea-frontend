@@ -9,8 +9,8 @@ const PesquisaProfissionalPage: React.FC = () => {
     return(
         <>
             <Navbar />
-            <PesquisaDeProfissional />
             <ProfissionaisProvider>
+                <PesquisaDeProfissional />
                 <div className="flex ml-40 mt-10 gap-8">
                     <BlocoFiltroProfissionais />
                     <BlocoMostrarProfissionais />

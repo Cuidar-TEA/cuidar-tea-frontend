@@ -5,6 +5,7 @@ interface FormData {
     profissao: string;
     ordenacao: string;
     atendimentoDomicilio: boolean;
+    aceitaConvenio: boolean;
     faixaPreco: string[];
 }
 
@@ -15,6 +16,7 @@ const BlocoFiltroProfissionais: React.FC = () => {
         profissao: "",
         ordenacao: "",
         atendimentoDomicilio: false,
+        aceitaConvenio: false,
         faixaPreco: []
     });
 
@@ -67,10 +69,13 @@ const BlocoFiltroProfissionais: React.FC = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
                 >
                     <option value="">Todas as profissões</option>
+                    <option value="medico">Médico(a)</option>
                     <option value="psicologo">Psicólogo(a)</option>
                     <option value="fonoaudiologo">Fonoaudiólogo(a)</option>
+                    <option value="fisioterapeuta">Fisioterapeuta</option>
                     <option value="terapeuta">Terapeuta Ocupacional</option>
-                    <option value="pediatra">Pediatra</option>
+                    <option value="pedagogo">Pedagogo(a)</option>
+                    <option value="psicopedagogo">Psicopedagogo(a)</option>
                 </select>
             </div>
 
@@ -110,6 +115,23 @@ const BlocoFiltroProfissionais: React.FC = () => {
                 </div>
             </div>
 
+            {/* Checkbox de Aceita Convênio */}
+            <div className="mb-6">
+                <div className="flex items-center">
+                    <input
+                        type="checkbox"
+                        id="aceitaConvenio"
+                        name="aceitaConvenio"
+                        checked={formData.aceitaConvenio}
+                        onChange={handleCheckboxChange}
+                        className="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 rounded focus:ring-red-500 focus:ring-2"
+                    />
+                    <label htmlFor="aceitaConvenio" className="ml-2 text-sm font-medium text-gray-700">
+                        Aceita convênio
+                    </label>
+                </div>
+            </div>
+
             {/* Filtros de Faixa de Preço */}
             <div className="mb-6">
                 <label className="block text-base font-medium text-gray-700 mb-3">
@@ -139,7 +161,7 @@ const BlocoFiltroProfissionais: React.FC = () => {
                             className="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 rounded focus:ring-red-500 focus:ring-2"
                         />
                         <label htmlFor="ate300" className="ml-2 text-sm font-medium text-gray-700">
-                            R$ 151 - R$ 300
+                            Até R$ 300
                         </label>
                     </div>
                     <div className="flex items-center">
@@ -152,7 +174,7 @@ const BlocoFiltroProfissionais: React.FC = () => {
                             className="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 rounded focus:ring-red-500 focus:ring-2"
                         />
                         <label htmlFor="ate500" className="ml-2 text-sm font-medium text-gray-700">
-                            R$ 301 - R$ 500
+                            Até R$ 500
                         </label>
                     </div>
                 </div>

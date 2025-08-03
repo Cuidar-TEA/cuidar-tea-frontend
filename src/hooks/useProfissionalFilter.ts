@@ -81,13 +81,14 @@ interface Profissional {
 }
 
 interface FiltrosProfissionais {
-  especialidade?: string;  // Parâmetro da API é 'especialidade', mas representa profissões
+  formacao?: string;  // Mudando de 'formacoes' para 'formacao' (singular)
   cidade?: string;
   estado?: string;
   aceita_convenio?: boolean;
   atende_a_domicilio?: boolean;
   valor_da_consulta?: number;
   nota_de_atendimento?: number;
+  nome?: string;  // Adicionando parâmetro para busca por nome
   orderBy?: string;  // Adicionando parâmetro de ordenação
 }
 
@@ -117,8 +118,12 @@ export const useProfissionais = (filtrosIniciais?: FiltrosProfissionais): UsePro
       // Constrói query params
       const queryParams = new URLSearchParams();
       
-      if (filtrosParaBusca.especialidade) {
-        queryParams.append('especialidade', filtrosParaBusca.especialidade);
+      if (filtrosParaBusca.formacao) {
+        queryParams.append('formacao', filtrosParaBusca.formacao);
+      }
+      
+      if (filtrosParaBusca.nome) {
+        queryParams.append('nome', filtrosParaBusca.nome);
       }
       
       if (filtrosParaBusca.cidade) {
@@ -237,6 +242,7 @@ export const useProfissionaisComFiltros = () => {
     profissao: string;
     ordenacao: string;
     atendimentoDomicilio: boolean;
+    aceitaConvenio: boolean;
     faixaPreco: string[];
   }) => {
     const filtros: FiltrosProfissionais = {};
@@ -244,8 +250,21 @@ export const useProfissionaisComFiltros = () => {
     console.log('=== APLICANDO FILTROS ===');
     console.log('Form data recebido:', formData);
     
-    // Por enquanto, vamos ignorar o filtro de profissão até descobrirmos os valores corretos
-    // if (formData.profissao && formData.profissao !== '') { ... }
+    // Mapeia profissão para formacao (parâmetro da API)
+    if (formData.profissao && formData.profissao !== '') {
+      const mapeamentoProfissao: { [key: string]: string } = {
+        'medico': 'Medico',
+        'psicologo': 'Psicologo',
+        'fonoaudiologo': 'Fonoaudiologo',
+        'fisioterapeuta': 'Fisioterapeuta',
+        'terapeuta': 'Terapeuta Ocupacional',
+        'pedagogo': 'Pedagogo',
+        'psicopedagogo': 'Psicopedagogo'
+      };
+      
+      filtros.formacao = mapeamentoProfissao[formData.profissao] || formData.profissao;
+      console.log('Profissão mapeada para parâmetro formacao:', filtros.formacao);
+    }
     
     // Mapeia ordenação (implementação no frontend)
     if (formData.ordenacao && formData.ordenacao !== '') {
@@ -263,6 +282,12 @@ export const useProfissionaisComFiltros = () => {
     if (formData.atendimentoDomicilio) {
       filtros.atende_a_domicilio = true;
       console.log('Atende a domicílio:', filtros.atende_a_domicilio);
+    }
+    
+    // Mapeia aceita convênio
+    if (formData.aceitaConvenio) {
+      filtros.aceita_convenio = true;
+      console.log('Aceita convênio:', filtros.aceita_convenio);
     }
     
     // Mapeia faixa de preço para valor da consulta (valor MÁXIMO permitido)
@@ -295,11 +320,25 @@ export const useProfissionaisComFiltros = () => {
     buscarProfissionais(filtros);
   };
 
+  const buscarPorNome = (nome: string) => {
+    const filtros: FiltrosProfissionais = {};
+    
+    if (nome && nome.trim() !== '') {
+      filtros.nome = nome.trim();
+      console.log('=== BUSCA POR NOME ===');
+      console.log('Nome pesquisado:', filtros.nome);
+      console.log('======================');
+    }
+    
+    buscarProfissionais(filtros);
+  };
+
   return {
     profissionais,
     loading,
     error,
     aplicarFiltros,
+    buscarPorNome,
     refetch
   };
 };

@@ -48,8 +48,10 @@ interface ProfissionaisContextType {
     profissao: string;
     ordenacao: string;
     atendimentoDomicilio: boolean;
+    aceitaConvenio: boolean;
     faixaPreco: string[];
   }) => void;
+  buscarPorNome: (nome: string) => void;
   refetch: () => void;
 }
 
@@ -61,6 +63,7 @@ export const ProfissionaisProvider: React.FC<{ children: ReactNode }> = ({ child
     loading,
     error,
     aplicarFiltros,
+    buscarPorNome,
     refetch
   } = useProfissionaisComFiltros();
 
@@ -70,6 +73,7 @@ export const ProfissionaisProvider: React.FC<{ children: ReactNode }> = ({ child
       loading,
       error,
       aplicarFiltros,
+      buscarPorNome,
       refetch
     }}>
       {children}

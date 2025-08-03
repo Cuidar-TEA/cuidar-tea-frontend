@@ -1,9 +1,18 @@
 import React from 'react';
 import { FaStar } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import { useProfissionaisContext } from '../../contexts/ProfissionaisContext';
 
 const BlocoMostrarProfissionais: React.FC = () => {
     const { profissionais, loading, error } = useProfissionaisContext();
+    const navigate = useNavigate();
+
+    const handleProfissionalClick = (profissional: any) => {
+        // Navega para a página do profissional passando os dados como state
+        navigate(`/profissional/${profissional.id_profissional}`, {
+            state: { profissional }
+        });
+    };
 
     if (loading) {
         return (
@@ -64,7 +73,11 @@ const BlocoMostrarProfissionais: React.FC = () => {
                                 .map(pe => pe.especialidades.nome_especialidade);
 
                             return (
-                                <div key={profissional.id_profissional} className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors duration-200 cursor-pointer border border-gray-200">
+                                <div 
+                                    key={profissional.id_profissional} 
+                                    className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors duration-200 cursor-pointer border border-gray-200"
+                                    onClick={() => handleProfissionalClick(profissional)}
+                                >
                                     <div className="flex items-start space-x-3">
                                         {/* Foto do Profissional */}
                                         <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">

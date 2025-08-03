@@ -14,8 +14,10 @@ function App() {
         <Route path="/cadastro" element={<CadastroPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/ProfissionalPage" element={<ProfissionalPage />} />
-        {/* Temporariamente redirecionando para /PesquisaProfissionalPage */}
-        <Route path="/" element={<PesquisaProfissionalPage />} />
+        <Route path="/profissional/:id" element={<ProfissionalPage />} />
+        <Route path="/pesquisa" element={<PesquisaProfissionalPage />} />
+        {/* Temporariamente redirecionando para /pesquisa */}
+        <Route path="/" element={<Navigate to="/pesquisa" replace />} />
       </Routes>
     </Router>
   );

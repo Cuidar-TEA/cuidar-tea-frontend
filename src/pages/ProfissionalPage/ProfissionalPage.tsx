@@ -3,6 +3,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import Navbar from '../../components/layout/Navbar';
 import BlocoProfissional from './BlocoProfissional';
 import BlocoSobreLocalizacaoAvaliacoes from './BlocoSobreLocalizacaoAvaliacoes';
+import BlocoAgendamento from './BlocoAgendamento';
 
 const ProfissionalPage: React.FC = () => {
     const location = useLocation();
@@ -70,9 +71,10 @@ const ProfissionalPage: React.FC = () => {
     return (
         <>
             <Navbar />
-           <div className="mt-10 ml-40">
+           <div className="mt-10 ml-40 space-y-6">
                 <BlocoProfissional profissional={profissionalFormatado} />
                 <BlocoSobreLocalizacaoAvaliacoes profissional={dadosDetalhados} />
+                <BlocoAgendamento profissional={profissionalFormatado} />
             </div>
             
         </>

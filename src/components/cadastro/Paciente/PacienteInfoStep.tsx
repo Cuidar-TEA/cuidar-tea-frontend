@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Select } from '../ui/FormElements';
+import { Input, Select } from '../../ui/FormElements';
 import { IMaskInput } from 'react-imask';
 
 interface StepProps {

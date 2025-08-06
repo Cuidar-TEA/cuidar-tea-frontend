@@ -15,12 +15,12 @@ export const estadosBrasileiros = [
   { sigla: 'TO', nome: 'Tocantins' },
 ];
 
-export const especialidades = [
-    'Terapia Cognitivo-Comportamental (TCC)',
-    'Análise do Comportamento Aplicada (ABA)',
-    'Psicopedagogia',
-    'Fonoaudiologia Infantil',
-    'Neuropediatria',
-    'Terapia Ocupacional',
-    'Musicoterapia'
+export const profissoes = [
+    'Psicólogo(a)',
+    'Fonoaudiólogo(a)',
+    'Terapeuta Ocupacional',
+    'Pediatra',
+    'Neurologista',
+    'Psicopedagogo(a)',
+    'Musicoterapeuta'
 ];

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Input, Select } from '../ui/FormElements';
+import { Input, Select } from '../../ui/FormElements';
 import { IMaskInput } from 'react-imask';
-import { estadosBrasileiros } from '../../utils/brasilData';
+import { estadosBrasileiros } from '../../../utils/brasilData';
 
 interface StepProps {
     formData: any;

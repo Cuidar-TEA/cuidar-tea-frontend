@@ -1,20 +1,45 @@
-import './index.css'
-import DashboardPage from './pages/DashboardPage';
-import CadastroPage from './pages/CadastroPage'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+// Layouts e Componentes de Rota
+import MainLayout from "./components/layout/MainLayout";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+
+// Nossas Páginas
+import LandingPage from "./pages/LandingPage";
+import CadastroPage from "./pages/CadastroPage";
+import LoginPage from "./pages/LoginPage";
+import DashboardPage from "./pages/DashboardPage";
+import SearchResultsPage from "./pages/PesquisaProfissionalPage/PesquisaProfissionalPage"; // Assumindo que a página de busca existe
 
 function App() {
   return (
-    <CadastroPage />
-  )
-}
+    <>
+      <BrowserRouter>
+        <Routes>
+          {/* --- ROTAS PÚBLICAS --- */}
+          {/* Estas rotas não exigem login e não têm a Navbar principal */}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/cadastro" element={<CadastroPage />} />
+          <Route path="/login" element={<LoginPage />} />
 
-export default App
+          {/* --- ROTAS PRIVADAS E COM LAYOUT --- */}
+          {/* Todas as rotas aqui dentro usarão o MainLayout (que tem a Navbar) */}
+          {/* E também exigirão que o usuário esteja logado (ProtectedRoute) */}
+          <Route element={<MainLayout />}>
+            <Route element={<ProtectedRoute />}>
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/profissionais" element={<SearchResultsPage />} />
+              {/* Adicione aqui futuras páginas privadas, como /perfil, /minhas-consultas, etc. */}
+            </Route>
+          </Route>
 
-
-/*function App() {
-  return (
-    <DashboardPage />
+        </Routes>
+      </BrowserRouter>
+      <ToastContainer position="top-right" autoClose={5000} theme="light" />
+    </>
   );
 }
 
-export default App;*/
+export default App;

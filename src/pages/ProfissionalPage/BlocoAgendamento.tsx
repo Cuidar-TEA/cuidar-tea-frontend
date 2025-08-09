@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FaCalendarAlt, FaClock, FaCheck, FaSpinner } from 'react-icons/fa';
 import { useAgendamento } from '../../hooks/useAgendamento';
+import { formatarDataCompletaBrasileira } from '../../utils/agendamento';
 
 interface BlocoAgendamentoProps {
   profissional: {
@@ -170,12 +171,7 @@ const BlocoAgendamento: React.FC<BlocoAgendamentoProps> = ({ profissional }) => 
           <h4 className="font-medium text-blue-900 mb-2">Resumo do Agendamento:</h4>
           <div className="text-sm text-blue-800 space-y-1">
             <p><strong>Profissional:</strong> {profissional.nome}</p>
-            <p><strong>Data:</strong> {new Date(dataSelecionada).toLocaleDateString('pt-BR', {
-              weekday: 'long',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            })}</p>
+            <p><strong>Data:</strong> {formatarDataCompletaBrasileira(dataSelecionada)}</p>
             <p><strong>Horário:</strong> {horarioSelecionado}</p>
           </div>
         </div>

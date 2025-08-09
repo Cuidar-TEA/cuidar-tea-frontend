@@ -132,14 +132,22 @@ export const agendamentoUtils = {
 
   // Formata data ISO para exibição
   formatarDataHorario: (isoString: string): string => {
+    // Cria a data diretamente no fuso horário local para evitar problemas
     const data = new Date(isoString);
+    
+    // Verifica se a data é válida
+    if (isNaN(data.getTime())) {
+      return 'Data inválida';
+    }
+    
     return data.toLocaleString('pt-BR', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      timeZone: 'America/Sao_Paulo' // Força o fuso horário brasileiro
     });
   }
 };

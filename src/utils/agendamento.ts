@@ -34,6 +34,24 @@ export const formatarDataBrasileira = (data: string): string => {
 };
 
 /**
+ * Formata uma data para o formato brasileiro completo com dia da semana
+ * @param data Data no formato AAAA-MM-DD
+ * @returns Data formatada como "segunda-feira, 15 de janeiro de 2024"
+ */
+export const formatarDataCompletaBrasileira = (data: string): string => {
+  const [ano, mes, dia] = data.split('-').map(Number);
+  // Cria a data corretamente evitando problemas de fuso horário
+  const dataLocal = new Date(ano, mes - 1, dia); // mes - 1 porque Date usa 0-11 para meses
+  
+  return dataLocal.toLocaleDateString('pt-BR', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
+
+/**
  * Gera uma lista de datas futuras no formato AAAA-MM-DD
  * @param dias Número de dias a partir de hoje
  * @returns Array com as datas

@@ -5,14 +5,33 @@ export const agendamentosService = {
   // Criar um novo agendamento
   criarAgendamento: async (dadosAgendamento: CriarAgendamentoRequest): Promise<CriarAgendamentoResponse> => {
     try {
-      console.log('Enviando agendamento:', dadosAgendamento);
+      console.log('🔄 Enviando agendamento para API...');
+      console.log('📋 Dados:', dadosAgendamento);
+      console.log('🔑 Token presente:', !!localStorage.getItem('authToken'));
       
       const response = await api.post<CriarAgendamentoResponse>('/agendamentos', dadosAgendamento);
       
-      console.log('Agendamento criado com sucesso:', response.data);
+      console.log('✅ Resposta da API:', response.status, response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error('❌ Erro na requisição de agendamento:');
+      console.error('Status:', error.response?.status);
+      console.error('Data:', error.response?.data);
+      console.error('Headers:', error.response?.headers);
+      console.error('Config:', error.config);
+      throw error;
+    }
+  },
+
+  // Buscar agendamentos do usuário logado
+  buscarMeusAgendamentos: async (): Promise<any[]> => {
+    try {
+      console.log('🔍 Buscando agendamentos do usuário...');
+      const response = await api.get('/agendamentos/meus');
+      console.log('✅ Agendamentos recebidos:', response.data);
       return response.data;
     } catch (error) {
-      console.error('Erro ao criar agendamento:', error);
+      console.error('❌ Erro ao buscar agendamentos:', error);
       throw error;
     }
   },
@@ -20,14 +39,10 @@ export const agendamentosService = {
   // Buscar disponibilidade de horários de um profissional em uma data específica
   buscarDisponibilidade: async (profissionalId: number, data: string): Promise<DisponibilidadeResponse> => {
     try {
-      console.log(`Buscando disponibilidade para profissional ${profissionalId} na data ${data}`);
-      
       // A API retorna apenas um array de horários disponíveis
       const response = await api.get<string[]>(`/profissionais/${profissionalId}/disponibilidade`, {
         params: { data } // data no formato AAAA-MM-DD
       });
-      
-      console.log('Horários recebidos da API:', response.data);
       
       // Transforma a resposta no formato esperado pelo frontend
       const disponibilidadeFormatada: DisponibilidadeResponse = {
@@ -36,10 +51,8 @@ export const agendamentosService = {
         horarios_ocupados: [] // Por enquanto vazio, pode ser implementado depois
       };
       
-      console.log('Disponibilidade formatada:', disponibilidadeFormatada);
       return disponibilidadeFormatada;
     } catch (error) {
-      console.error('Erro ao buscar disponibilidade:', error);
       throw error;
     }
   },

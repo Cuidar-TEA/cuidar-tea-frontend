@@ -11,7 +11,9 @@ import LandingPage from "./pages/LandingPage";
 import CadastroPage from "./pages/CadastroPage";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
-import SearchResultsPage from "./pages/PesquisaProfissionalPage/PesquisaProfissionalPage"; // Assumindo que a página de busca existe
+import SearchResultsPage from "./pages/PesquisaProfissionalPage/PesquisaProfissionalPage";
+import ProfissionalPage from "./pages/ProfissionalPage/ProfissionalPage";
+import ConsultasPage from "./pages/ConsultasPage";
 
 function App() {
   return (
@@ -31,6 +33,8 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/profissionais" element={<SearchResultsPage />} />
+              <Route path="/profissional/:id" element={<ProfissionalPage />} />
+              <Route path="/consultas" element={<ConsultasPage />} />
               {/* Adicione aqui futuras páginas privadas, como /perfil, /minhas-consultas, etc. */}
             </Route>
           </Route>

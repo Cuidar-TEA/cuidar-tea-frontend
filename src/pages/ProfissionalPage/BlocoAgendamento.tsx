@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { FaCalendarAlt, FaClock, FaCheck, FaSpinner } from 'react-icons/fa';
+import { FaCalendarAlt, FaClock, FaCheck, FaSpinner, FaLock } from 'react-icons/fa';
 import { useAgendamento } from '../../hooks/useAgendamento';
+import { useAuth } from '../../hooks/useAuth';
 import { formatarDataCompletaBrasileira } from '../../utils/agendamento';
 
 interface BlocoAgendamentoProps {
@@ -15,6 +16,9 @@ const BlocoAgendamento: React.FC<BlocoAgendamentoProps> = ({ profissional }) => 
   const [horarioSelecionado, setHorarioSelecionado] = useState<string>('');
   const [sucesso, setSucesso] = useState(false);
   
+  // Hook para verificar autenticação e tipo de usuário
+  const { isCliente, isAuthenticated } = useAuth();
+  
   // Hook para gerenciar agendamentos
   const { 
     loading, 
@@ -26,12 +30,43 @@ const BlocoAgendamento: React.FC<BlocoAgendamentoProps> = ({ profissional }) => 
     resetStatus 
   } = useAgendamento();
 
+  // Se não for cliente, não mostra o bloco de agendamento
+  if (!isAuthenticated) {
+    return (
+      <div className="bg-gray-100 border border-gray-200 rounded-lg p-6 w-full max-w-4xl">
+        <h3 className="text-xl font-semibold text-gray-700 mb-4 flex items-center">
+          <FaLock className="mr-3 text-gray-500" />
+          Agendar Consulta
+        </h3>
+        <div className="text-center py-8">
+          <p className="text-gray-600 mb-2">Apenas clientes podem agendar consultas</p>
+          <p className="text-sm text-gray-500">Faça login como cliente para agendar</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isCliente) {
+    return (
+      <div className="bg-gray-100 border border-gray-200 rounded-lg p-6 w-full max-w-4xl">
+        <h3 className="text-xl font-semibold text-gray-700 mb-4 flex items-center">
+          <FaLock className="mr-3 text-gray-500" />
+          Agendar Consulta
+        </h3>
+        <div className="text-center py-8">
+          <p className="text-gray-600 mb-2">Apenas clientes podem agendar consultas</p>
+          <p className="text-sm text-gray-500">Faça login como cliente para agendar</p>
+        </div>
+      </div>
+    );
+  }
+
   // Gera a data mínima (hoje) e máxima (30 dias a partir de hoje)
   const gerarLimitesDatas = () => {
     const hoje = new Date();
     const dataMinima = hoje.toISOString().split('T')[0]; // AAAA-MM-DD
     
-    const dataMaxima = new Date(hoje);
+    const dataMaxima = new Date();
     dataMaxima.setDate(hoje.getDate() + 30);
     const dataMaximaString = dataMaxima.toISOString().split('T')[0]; // AAAA-MM-DD
     
@@ -40,13 +75,8 @@ const BlocoAgendamento: React.FC<BlocoAgendamentoProps> = ({ profissional }) => 
 
   const { dataMinima, dataMaxima } = gerarLimitesDatas();
 
-  // Apenas horários da API - se não há dados, não mostra nada
+  // Apenas horários disponíveis da API
   const horariosDisponiveis = disponibilidade?.horarios_disponiveis || [];
-  const horariosOcupados = disponibilidade?.horarios_ocupados || [];
-
-  const isHorarioOcupado = (horario: string) => {
-    return horariosOcupados.includes(horario);
-  };
 
   const handleDataChange = async (data: string) => {
     setDataSelecionada(data);
@@ -54,43 +84,59 @@ const BlocoAgendamento: React.FC<BlocoAgendamentoProps> = ({ profissional }) => 
     resetStatus(); // Reset status do agendamento
     
     // Busca disponibilidade para a data selecionada
-    // O input type="date" já retorna no formato AAAA-MM-DD que a API espera
     if (data) {
       await buscarDisponibilidade(parseInt(profissional.id), data);
     }
   };
 
   const handleHorarioClick = (horario: string) => {
-    if (!isHorarioOcupado(horario)) {
-      setHorarioSelecionado(horario);
-      resetStatus(); // Reset status do agendamento
-    }
+    setHorarioSelecionado(horario);
+    resetStatus(); // Reset status do agendamento
   };
 
   const handleAgendar = async () => {
+    console.log('🎯 handleAgendar chamado:', {
+      dataSelecionada,
+      horarioSelecionado,
+      profissionalId: profissional.id,
+      profissionalIdParsed: parseInt(profissional.id),
+      profissionalNome: profissional.nome
+    });
+    
     if (dataSelecionada && horarioSelecionado) {
       try {
+        console.log('📞 Chamando criarAgendamento...');
         await criarAgendamento(
           parseInt(profissional.id), 
           dataSelecionada, 
           horarioSelecionado
         );
         
+        console.log('🎉 Agendamento bem-sucedido no componente!');
+        
         // Sucesso - limpa formulário e mostra mensagem
         setSucesso(true);
         setDataSelecionada('');
         setHorarioSelecionado('');
-        console.log('Agendamento criado com sucesso');
+        
+        // Atualiza a disponibilidade para refletir o novo agendamento
+        if (dataSelecionada) {
+          console.log('🔄 Atualizando disponibilidade após agendamento...');
+          await buscarDisponibilidade(parseInt(profissional.id), dataSelecionada);
+        }
+        
       } catch (err) {
+        console.error('💥 Erro capturado no componente:', err);
         // Erro já está sendo tratado no hook
-        console.error('Erro ao criar agendamento:', err);
       }
+    } else {
+      console.warn('⚠️ Data ou horário não selecionados');
     }
   };
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-6 w-full max-w-4xl">
-      <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+      <h3 className="text-xl font-semibold text-gray-800 mb-6 flex items-center">
         <FaCalendarAlt className="mr-3 text-blue-600" />
         Agendar Consulta
       </h3>
@@ -130,21 +176,17 @@ const BlocoAgendamento: React.FC<BlocoAgendamentoProps> = ({ profissional }) => 
           ) : horariosDisponiveis.length > 0 ? (
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
               {horariosDisponiveis.map((horario: string) => {
-                const ocupado = isHorarioOcupado(horario);
                 const selecionado = horarioSelecionado === horario;
                 
                 return (
                   <button
                     key={horario}
                     onClick={() => handleHorarioClick(horario)}
-                    disabled={ocupado}
                     className={`
                       relative px-3 py-2 rounded-lg border-2 text-sm font-medium transition-all duration-200
-                      ${ocupado 
-                        ? 'bg-red-100 border-red-300 text-red-600 cursor-not-allowed' 
-                        : selecionado
-                          ? 'bg-blue-600 border-blue-600 text-white shadow-lg transform scale-105'
-                          : 'bg-green-100 border-green-300 text-green-700 hover:bg-green-200 hover:border-green-400'
+                      ${selecionado
+                        ? 'bg-blue-600 border-blue-600 text-white shadow-lg transform scale-105'
+                        : 'bg-green-100 border-green-300 text-green-700 hover:bg-green-200 hover:border-green-400'
                       }
                     `}
                   >
@@ -198,42 +240,16 @@ const BlocoAgendamento: React.FC<BlocoAgendamentoProps> = ({ profissional }) => 
           onClick={handleAgendar}
           disabled={!dataSelecionada || !horarioSelecionado || loading}
           className={`
-            px-6 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2
-            ${dataSelecionada && horarioSelecionado && !loading
-              ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg'
-              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-2
+            ${!dataSelecionada || !horarioSelecionado || loading
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : 'bg-blue-600 text-white hover:bg-blue-700 shadow-md hover:shadow-lg'
             }
           `}
         >
           {loading && <FaSpinner className="animate-spin" />}
-          <span>
-            {loading 
-              ? 'Agendando...'
-              : dataSelecionada && horarioSelecionado 
-                ? 'Confirmar Agendamento' 
-                : 'Selecione data e horário'
-            }
-          </span>
+          {loading ? 'Agendando...' : 'Confirmar Agendamento'}
         </button>
-      </div>
-
-      {/* Legenda */}
-      <div className="mt-6 pt-4 border-t border-gray-200">
-        <h5 className="text-xs font-medium text-gray-600 mb-2">Legenda:</h5>
-        <div className="flex flex-wrap gap-4 text-xs">
-          <div className="flex items-center">
-            <div className="w-4 h-4 bg-green-100 border-2 border-green-300 rounded mr-2"></div>
-            <span className="text-gray-600">Disponível</span>
-          </div>
-          <div className="flex items-center">
-            <div className="w-4 h-4 bg-blue-600 border-2 border-blue-600 rounded mr-2"></div>
-            <span className="text-gray-600">Selecionado</span>
-          </div>
-          <div className="flex items-center">
-            <div className="w-4 h-4 bg-red-100 border-2 border-red-300 rounded mr-2"></div>
-            <span className="text-gray-600">Ocupado</span>
-          </div>
-        </div>
       </div>
     </div>
   );

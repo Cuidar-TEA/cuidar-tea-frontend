@@ -53,7 +53,7 @@ const BlocoFiltroProfissionais: React.FC = () => {
     };
 
     return (
-        <div className="w-72 h-auto bg-white border border-gray-200 rounded-2xl shadow-lg p-6 ml-24 mt-10">
+        <div className="w-full lg:w-72 h-auto bg-white border border-gray-200 rounded-2xl shadow-lg p-6">
             <h2 className="text-2xl font-semibold mb-6 text-center">Filtros</h2>
             
             {/* Select de Profissão */}

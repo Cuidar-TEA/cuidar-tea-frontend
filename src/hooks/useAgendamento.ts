@@ -14,8 +14,6 @@ export const useAgendamento = () => {
       setLoadingDisponibilidade(true);
       setError(null);
 
-      console.log(`Buscando disponibilidade para profissional ${profissionalId} na data ${data}`);
-
       // Busca disponibilidade na API usando a data já formatada
       const response = await agendamentosService.buscarDisponibilidade(profissionalId, data);
       
@@ -23,7 +21,6 @@ export const useAgendamento = () => {
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || err.message || 'Erro ao buscar disponibilidade';
       setError(errorMessage);
-      console.error('Erro ao buscar disponibilidade:', err);
     } finally {
       setLoadingDisponibilidade(false);
     }
@@ -38,10 +35,14 @@ export const useAgendamento = () => {
       setLoading(true);
       setError(null);
 
+      console.log('🚀 Iniciando criação de agendamento...');
+      console.log('👤 Profissional ID:', profissionalId);
+      console.log('📅 Data:', dataSelecionada);
+      console.log('🕐 Horário:', horarioSelecionado);
+
       // Cria o datetime em formato ISO
       const datetime = agendamentoUtils.criarDatetimeISO(dataSelecionada, horarioSelecionado);
-
-      console.log(`Criando agendamento para ${datetime}`);
+      console.log('📆 DateTime ISO criado:', datetime);
 
       const request: CriarAgendamentoRequest = {
         profissionais_id_profissional: profissionalId,
@@ -50,15 +51,26 @@ export const useAgendamento = () => {
         duracao_consulta_minutos: 60 // Duração padrão de 60 minutos
       };
 
+      console.log('📤 Request final:', JSON.stringify(request, null, 2));
+
       await agendamentosService.criarAgendamento(request);
+      
+      console.log('✅ Agendamento criado com sucesso!');
       
       // Reset do formulário após sucesso
       setDisponibilidade(null);
       
     } catch (err: any) {
+      console.error('❌ Erro capturado no hook useAgendamento:');
+      console.error('Tipo do erro:', typeof err);
+      console.error('Erro completo:', err);
+      console.error('Message:', err.message);
+      console.error('Response:', err.response);
+      
       const errorMessage = err.response?.data?.message || err.message || 'Erro ao criar agendamento';
+      console.error('📝 Mensagem de erro final:', errorMessage);
+      
       setError(errorMessage);
-      console.error('Erro ao criar agendamento:', err);
       throw err; // Re-throw para que o componente possa tratar
     } finally {
       setLoading(false);

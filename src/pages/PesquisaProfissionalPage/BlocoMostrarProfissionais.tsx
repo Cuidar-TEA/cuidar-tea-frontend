@@ -16,7 +16,7 @@ const BlocoMostrarProfissionais: React.FC = () => {
 
     if (loading) {
         return (
-            <div className="w-[1000px] h-[500px] bg-white border border-gray-200 rounded-2xl shadow-lg p-6 ml-8 mt-10 flex items-center justify-center">
+            <div className="flex-1 min-h-[500px] bg-white border border-gray-200 rounded-2xl shadow-lg p-6 flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
                     <p className="text-gray-600">Carregando profissionais...</p>
@@ -27,7 +27,7 @@ const BlocoMostrarProfissionais: React.FC = () => {
 
     if (error) {
         return (
-            <div className="w-[1000px] h-[500px] bg-white border border-gray-200 rounded-2xl shadow-lg p-6 ml-8 mt-10 flex items-center justify-center">
+            <div className="flex-1 min-h-[500px] bg-white border border-gray-200 rounded-2xl shadow-lg p-6 flex items-center justify-center">
                 <div className="text-center">
                     <p className="text-red-600 mb-4">{error}</p>
                     <button 
@@ -42,7 +42,7 @@ const BlocoMostrarProfissionais: React.FC = () => {
     }
 
     return (
-        <div className="w-[1000px] h-[500px] bg-white border border-gray-200 rounded-2xl shadow-lg p-6 ml-8 mt-10">
+        <div className="flex-1 min-h-[500px] bg-white border border-gray-200 rounded-2xl shadow-lg p-6">
             <h2 className="text-2xl font-semibold mb-6 text-center">
                 Profissionais ({profissionais.length} encontrados)
             </h2>

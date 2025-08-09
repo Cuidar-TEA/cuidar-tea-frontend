@@ -23,7 +23,14 @@ export default function LoginPage() {
             });
 
             if (response.data.data.token) {
-                localStorage.setItem('authToken', response.data.data.token);
+                const { token, tipoUsuario } = response.data.data;
+                
+                // Salvar dados no localStorage
+                localStorage.setItem('authToken', token);
+                localStorage.setItem('userType', tipoUsuario);
+                
+                // Disparar evento para notificar outros componentes sobre mudança de auth
+                window.dispatchEvent(new Event('authChanged'));
                 
                 toast.success('Login realizado com sucesso! Redirecionando...');
                 

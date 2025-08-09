@@ -1,5 +1,5 @@
-import api from '../../../cuidar-tea-frontend/src/services/api';
-import type { CriarAgendamentoRequest, CriarAgendamentoResponse, DisponibilidadeResponse } from '../../../cuidar-tea-frontend/src/types/agendamento';
+import api from './api';
+import type { CriarAgendamentoRequest, CriarAgendamentoResponse, DisponibilidadeResponse } from '../types/agendamento';
 
 export const agendamentosService = {
   // Criar um novo agendamento

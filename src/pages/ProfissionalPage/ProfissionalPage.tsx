@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-import Navbar from '../../../../cuidar-tea-frontend/src/components/layout/Navbar';
+import Navbar from '../../components/layout/Navbar';
 import BlocoProfissional from './BlocoProfissional';
 import BlocoSobreLocalizacaoAvaliacoes from './BlocoSobreLocalizacaoAvaliacoes';
 import BlocoAgendamento from './BlocoAgendamento';

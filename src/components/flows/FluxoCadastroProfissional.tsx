@@ -51,7 +51,8 @@ export default function FluxoCadastroProfissional() {
         </>
       )}
       <p className="text-xs text-center text-gray-500 mt-6">
-        Já tem uma conta? <a href="/login" className="font-semibold text-red-600 hover:underline">Faça login</a>
+        {/* Corrigir Login para redirecionamento correto */}
+        Já tem uma conta? <Link to="/login" className="font-semibold text-red-600 hover:underline">Faça login</Link>
       </p>
     </div>
   );

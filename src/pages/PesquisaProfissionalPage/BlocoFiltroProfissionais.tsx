@@ -56,6 +56,7 @@ const BlocoFiltroProfissionais: React.FC = () => {
         <div className="w-72 h-auto bg-white border border-gray-200 rounded-2xl shadow-lg p-6 ml-24 mt-10">
             <h2 className="text-2xl font-semibold mb-6 text-center">Filtros</h2>
             
+            {/* Select de Profissão */}
             <div className="mb-6">
                 <label htmlFor="profissao" className="block text-base font-medium text-gray-700 mb-2">
                     Profissão
@@ -78,6 +79,7 @@ const BlocoFiltroProfissionais: React.FC = () => {
                 </select>
             </div>
 
+            {/* Select de Ordenação */}
             <div className="mb-6">
                 <label htmlFor="ordenacao" className="block text-base font-medium text-gray-700 mb-2">
                     Ordenar por
@@ -96,6 +98,7 @@ const BlocoFiltroProfissionais: React.FC = () => {
                 </select>
             </div>
 
+            {/* Checkbox de Atendimento a Domicílio */}
             <div className="mb-6">
                 <div className="flex items-center">
                     <input
@@ -112,6 +115,7 @@ const BlocoFiltroProfissionais: React.FC = () => {
                 </div>
             </div>
 
+            {/* Checkbox de Aceita Convênio */}
             <div className="mb-6">
                 <div className="flex items-center">
                     <input
@@ -128,6 +132,7 @@ const BlocoFiltroProfissionais: React.FC = () => {
                 </div>
             </div>
 
+            {/* Filtros de Faixa de Preço */}
             <div className="mb-6">
                 <label className="block text-base font-medium text-gray-700 mb-3">
                     Faixa de Preço
@@ -175,6 +180,7 @@ const BlocoFiltroProfissionais: React.FC = () => {
                 </div>
             </div>
 
+            {/* Botão de Aplicar Filtros */}
             <div className="mt-6">
                 <button
                     onClick={aplicarFiltros}

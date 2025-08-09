@@ -153,7 +153,7 @@ export const useProfissionais = (filtrosIniciais?: FiltrosProfissionais): UsePro
       // Não enviamos orderBy para a API, fazemos ordenação no frontend
       
       // URL direta do seu backend local
-      const url = `http://localhost:3000/api/profissionais${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+      const url = `http://localhost:3001/api/profissionais${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
       
       console.log('=== REQUISIÇÃO PARA API ===');
       console.log('URL completa:', url);

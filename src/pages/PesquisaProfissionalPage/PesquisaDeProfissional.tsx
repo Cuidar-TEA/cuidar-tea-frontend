@@ -9,15 +9,18 @@ const PesquisaDeProfissional: React.FC = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         
+        // Se há termo de pesquisa, busca por nome
         if (termoPesquisa.trim()) {
             buscarPorNome(termoPesquisa.trim());
         } else {
+            // Se não há termo, busca todos os profissionais
             buscarPorNome("");
         }
     }
     return(
         <div className="w-full max-w-4xl mx-auto p-4 mt-10">
             <form onSubmit={handleSubmit} className="flex items-center gap-3">
+                {/* Barra de Pesquisa */}
                 <div className="flex-1 relative">
                     <input
                         type="text"
@@ -29,6 +32,7 @@ const PesquisaDeProfissional: React.FC = () => {
                     <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 </div>
 
+                {/* Botão de Pesquisar */}
                 <button
                     type="submit"
                     className="px-6 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-300 shadow-sm whitespace-nowrap"

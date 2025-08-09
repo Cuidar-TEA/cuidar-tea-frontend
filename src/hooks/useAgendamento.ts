@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { agendamentosService } from '../services/agendamentos';
-import type { CriarAgendamentoRequest, DisponibilidadeResponse } from '../../../cuidar-tea-frontend/src/types/agendamento';
-import * as agendamentoUtils from '../../../cuidar-tea-frontend/src/utils/agendamento';
+import type { CriarAgendamentoRequest, DisponibilidadeResponse } from '../types/agendamento';
+import * as agendamentoUtils from '../utils/agendamento';
 
 export const useAgendamento = () => {
   const [loading, setLoading] = useState(false);

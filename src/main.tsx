@@ -1,10 +1,30 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 import './index.css'
-import App from './App.tsx'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import DashboardPage from './pages/DashboardPage';
+import CadastroPage from './pages/CadastroPage';
+import ProfissionalPage from './pages/ProfissionalPage/ProfissionalPage';
+import PesquisaProfissionalPage from './pages/PesquisaProfissionalPage/PesquisaProfissionalPage';
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/cadastro" element={<CadastroPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/ProfissionalPage" element={<ProfissionalPage />} />
+        <Route path="/profissional/:id" element={<ProfissionalPage />} />
+        <Route path="/pesquisa" element={<PesquisaProfissionalPage />} />
+        {/* Temporariamente redirecionando para /pesquisa */}
+        <Route path="/" element={<Navigate to="/pesquisa" replace />} />
+      </Routes>
+    </Router>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
     <App />
-  </StrictMode>,
-)
+  </React.StrictMode>,
+);

@@ -107,6 +107,8 @@ export const useProfissionais = (filtrosIniciais?: FiltrosProfissionais): UsePro
   const [filtrosAtuais, setFiltrosAtuais] = useState<FiltrosProfissionais>(filtrosIniciais || {});
 
   const buscarProfissionais = async (filtros?: FiltrosProfissionais) => {
+    let url = '';
+    
     try {
       setLoading(true);
       setError(null);
@@ -153,7 +155,7 @@ export const useProfissionais = (filtrosIniciais?: FiltrosProfissionais): UsePro
       // Não enviamos orderBy para a API, fazemos ordenação no frontend
       
       // URL direta do seu backend local
-      const url = `http://localhost:3001/api/profissionais${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+      url = `http://localhost:3000/api/profissionais${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
       
       console.log('=== REQUISIÇÃO PARA API ===');
       console.log('URL completa:', url);
@@ -176,26 +178,43 @@ export const useProfissionais = (filtrosIniciais?: FiltrosProfissionais): UsePro
       
       const data = await response.json();
       console.log('=== RESPOSTA DA API ===');
-      console.log('Número de profissionais encontrados:', data.length);
+      console.log('Dados brutos recebidos:', data);
       
-      if (data.length > 0) {
+      // Garantir que data seja sempre um array
+      // A API pode retornar diretamente um array ou um objeto com propriedade data
+      let profissionaisArray: Profissional[] = [];
+      
+      if (Array.isArray(data)) {
+        profissionaisArray = data;
+      } else if (data && Array.isArray(data.data)) {
+        profissionaisArray = data.data;
+      } else if (data && Array.isArray(data.profissionais)) {
+        profissionaisArray = data.profissionais;
+      } else {
+        console.warn('Formato de resposta inesperado da API:', data);
+        profissionaisArray = [];
+      }
+      
+      console.log('Número de profissionais encontrados:', profissionaisArray.length);
+      
+      if (profissionaisArray.length > 0) {
         console.log('Exemplo do primeiro profissional:');
-        console.log('- Nome:', data[0].nome);
-        console.log('- Valor consulta:', data[0].valor_consulta);
-        console.log('- Cidade:', data[0].enderecos?.cidade);
-        console.log('- Estado:', data[0].enderecos?.estado);
-        console.log('- Aceita convênio:', data[0].aceita_convenio);
-        console.log('- Atende domicílio:', data[0].atende_domicilio);
-        console.log('- Especialidades:', data[0].profissional_especialidades?.map((pe: any) => pe.especialidades?.nome_especialidade));
+        console.log('- Nome:', profissionaisArray[0].nome);
+        console.log('- Valor consulta:', profissionaisArray[0].valor_consulta);
+        console.log('- Cidade:', profissionaisArray[0].enderecos?.cidade);
+        console.log('- Estado:', profissionaisArray[0].enderecos?.estado);
+        console.log('- Aceita convênio:', profissionaisArray[0].aceita_convenio);
+        console.log('- Atende domicílio:', profissionaisArray[0].atende_domicilio);
+        console.log('- Especialidades:', profissionaisArray[0].profissional_especialidades?.map((pe: any) => pe.especialidades?.nome_especialidade));
       } else {
         console.log('Nenhum profissional encontrado com os filtros aplicados');
       }
 
       // Aplicar ordenação no frontend se especificada
-      let dadosOrdenados = [...data];
+      let dadosOrdenados = [...profissionaisArray];
       if (filtrosParaBusca.orderBy) {
         console.log('Aplicando ordenação no frontend:', filtrosParaBusca.orderBy);
-        dadosOrdenados = ordenarProfissionais(data, filtrosParaBusca.orderBy);
+        dadosOrdenados = ordenarProfissionais(profissionaisArray, filtrosParaBusca.orderBy);
       }
 
       console.log('======================');
@@ -203,8 +222,20 @@ export const useProfissionais = (filtrosIniciais?: FiltrosProfissionais): UsePro
       setProfissionais(dadosOrdenados);
       
     } catch (err) {
-      console.error('Erro ao buscar profissionais:', err);
-      setError(err instanceof Error ? err.message : 'Erro ao conectar com o servidor');
+      console.error('=== ERRO AO BUSCAR PROFISSIONAIS ===');
+      console.error('Erro completo:', err);
+      console.error('Tipo do erro:', typeof err);
+      console.error('URL que falhou:', url);
+      console.error('=====================================');
+      
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Erro ao conectar com o servidor');
+      }
+      
+      // Garantir que sempre temos um array vazio em caso de erro
+      setProfissionais([]);
     } finally {
       setLoading(false);
     }

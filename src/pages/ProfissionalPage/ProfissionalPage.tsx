@@ -39,6 +39,7 @@ const ProfissionalPage: React.FC = () => {
     const profissionalFormatado = {
         id: profissionalData.id_profissional.toString(),
         nome: profissionalData.nome,
+        enderecos_id_endereco: profissionalData.enderecos_id_endereco,
         especialidade: `${profissionalData.tipo_registro} ${profissionalData.numero_registro}`,
         avaliacao: profissionalData.agendamentos.length > 0 
             ? profissionalData.agendamentos.reduce((acc: number, ag: any) => acc + (ag.nota_atendimento || 0), 0) / profissionalData.agendamentos.length 

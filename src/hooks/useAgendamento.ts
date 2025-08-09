@@ -29,7 +29,8 @@ export const useAgendamento = () => {
   const criarAgendamento = useCallback(async (
     profissionalId: number,
     dataSelecionada: string,
-    horarioSelecionado: string
+    horarioSelecionado: string,
+    enderecoId: number = 1
   ): Promise<void> => {
     try {
       setLoading(true);
@@ -37,6 +38,7 @@ export const useAgendamento = () => {
 
       console.log('🚀 Iniciando criação de agendamento...');
       console.log('👤 Profissional ID:', profissionalId);
+      console.log('🏠 Endereço ID:', enderecoId);
       console.log('📅 Data:', dataSelecionada);
       console.log('🕐 Horário:', horarioSelecionado);
 
@@ -46,7 +48,7 @@ export const useAgendamento = () => {
 
       const request: CriarAgendamentoRequest = {
         profissionais_id_profissional: profissionalId,
-        enderecos_id_endereco: 1, // Valor padrão por enquanto
+        enderecos_id_endereco: enderecoId,
         data_horario_inicio: datetime,
         duracao_consulta_minutos: 60 // Duração padrão de 60 minutos
       };

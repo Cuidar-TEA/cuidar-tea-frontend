@@ -6,19 +6,20 @@
  * Converte uma data e horário para formato ISO (usado pela API)
  * @param data Data no formato AAAA-MM-DD
  * @param horario Horário no formato HH:MM
- * @returns Data/hora em formato ISO
+ * @returns Data/hora em formato ISO (UTC)
  */
 export const criarDatetimeISO = (data: string, horario: string): string => {
   const [ano, mes, dia] = data.split('-');
   const [hora, minuto] = horario.split(':');
   
-  const date = new Date(
+  // Cria a data em UTC para evitar problemas de timezone
+  const date = new Date(Date.UTC(
     parseInt(ano),
     parseInt(mes) - 1, // JavaScript usa 0-11 para meses
     parseInt(dia),
     parseInt(hora),
     parseInt(minuto)
-  );
+  ));
   
   return date.toISOString();
 };

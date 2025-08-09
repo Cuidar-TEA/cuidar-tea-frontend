@@ -37,6 +37,17 @@ export const useConsultas = () => {
       setError(null);
       
       const response = await agendamentosService.buscarMeusAgendamentos();
+      console.log('🔍 Dados brutos do backend:', response);
+      
+      // Log específico dos horários
+      response.forEach((consulta, index) => {
+        console.log(`📅 Consulta ${index + 1}:`, {
+          id: consulta.id,
+          data_horario_inicio: consulta.data_horario_inicio,
+          profissional: consulta.profissional?.nome || consulta.profissionais?.nome
+        });
+      });
+      
       setConsultas(response);
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || err.message || 'Erro ao buscar consultas';
@@ -62,10 +73,19 @@ export const useConsultas = () => {
   };
 
   const formatarHorario = (dataHorario: string) => {
-    return new Date(dataHorario).toLocaleTimeString('pt-BR', {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    // Debug: vamos ver exatamente o que está chegando
+    console.log('🔍 formatarHorario recebeu:', dataHorario);
+    
+    // Converte para UTC e depois extrai apenas a hora/minuto original
+    // Isso garante que mostramos o horário como foi agendado (ex: 07:00)
+    const date = new Date(dataHorario);
+    const utcHour = date.getUTCHours();
+    const utcMinute = date.getUTCMinutes();
+    
+    const resultado = `${utcHour.toString().padStart(2, '0')}:${utcMinute.toString().padStart(2, '0')}`;
+    console.log('🕐 formatarHorario resultado:', resultado);
+    
+    return resultado;
   };
 
   const getStatusColor = (status: string) => {

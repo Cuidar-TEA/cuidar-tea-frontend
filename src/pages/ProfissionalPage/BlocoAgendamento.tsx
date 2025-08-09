@@ -8,6 +8,7 @@ interface BlocoAgendamentoProps {
   profissional: {
     id: string;
     nome: string;
+    enderecos_id_endereco?: number;
   };
 }
 
@@ -109,7 +110,8 @@ const BlocoAgendamento: React.FC<BlocoAgendamentoProps> = ({ profissional }) => 
         await criarAgendamento(
           parseInt(profissional.id), 
           dataSelecionada, 
-          horarioSelecionado
+          horarioSelecionado,
+          profissional.enderecos_id_endereco || 1
         );
         
         console.log('🎉 Agendamento bem-sucedido no componente!');
@@ -122,7 +124,9 @@ const BlocoAgendamento: React.FC<BlocoAgendamentoProps> = ({ profissional }) => 
         // Atualiza a disponibilidade para refletir o novo agendamento
         if (dataSelecionada) {
           console.log('🔄 Atualizando disponibilidade após agendamento...');
+          console.log('📊 Horários ANTES da atualização:', horariosDisponiveis);
           await buscarDisponibilidade(parseInt(profissional.id), dataSelecionada);
+          console.log('📊 Horários DEPOIS da atualização:', disponibilidade?.horarios_disponiveis);
         }
         
       } catch (err) {

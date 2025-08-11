@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 const familiaSchema = z.object({
   nomeCompleto: z.string().min(3, "Nome deve ter no mínimo 3 caracteres."),
   telefone: z.string().refine(tel => tel.replace(/\D/g, '').length >= 10, "Telefone inválido."),
+  //cpf: z.string().min(11, "cpf deve ter 11 digitos"),
   cpf: z.string().refine(cpf => cpfValidator.isValid(cpf), "CPF do responsável inválido."),
   cep: z.string().refine(cep => cep.replace(/\D/g, '').length === 8, "CEP inválido."),
   logradouro: z.string().min(1, "Logradouro é obrigatório."),

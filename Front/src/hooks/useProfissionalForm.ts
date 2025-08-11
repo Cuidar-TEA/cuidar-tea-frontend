@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react';
 import { z, type ZodIssue } from 'zod';
 import { cpf as cpfValidator } from 'cpf-cnpj-validator';
 import axios from 'axios';
-import api from '../services/api';
+import api from '../../../Front/src/services/api';
 import { toast } from 'react-toastify';
 
 const profissionalSchema = z.object({
   nomeCompleto: z.string().min(3, "Nome deve ter no mínimo 3 caracteres."),
   telefone: z.string().refine(tel => tel.replace(/\D/g, '').length >= 10, "Telefone inválido."),
+  //cpf: z.string().min(11, "cpf deve ter 11 digitos"),
   cpf: z.string().refine(cpf => cpfValidator.isValid(cpf), "CPF inválido."),
   profissao: z.string().min(1, "Profissão é obrigatória."),
   especialidade: z.string().min(1, "Especialidade é obrigatória."),

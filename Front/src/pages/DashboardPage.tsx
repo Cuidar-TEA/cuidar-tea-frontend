@@ -1,40 +1,45 @@
-import Navbar from '../components/layout/Navbar';
-import FeaturedProfessionals from '../components/dashboard/FeaturedProfissional';
-import SearchProfessionals from '../components/dashboard/Pesquisa';
-import TipOfTheDay from '../components/dashboard/DicaDoDia';
-
-const UpcomingAppointments = () => (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-xl font-bold text-gray-800 mb-4">Próximas Consultas</h2>
-        <p className="text-gray-500">Nenhuma consulta agendada para os próximos dias.</p>
-    </div>
-)
+import FeaturedProfessionals from '../components/dashboard/FeaturedProfessionals';
+import SearchProfessionals from '../components/dashboard/SearchProfessionals';
+import TipOfTheDay from '../components/dashboard/DailyTip';
+import UpcomingAppointments from '../components/dashboard/AgendamentosPaciente';
+import { useDashboardData } from '../hooks/useDashboardData';
 
 export default function DashboardPage() {
+  const { user, professionals, loading, error, searchProfessionals } = useDashboardData();
+
+  if (loading) {
+    return (
+        <div className="bg-gray-100 min-h-screen">
+            <div className="text-center py-20 text-gray-600 font-semibold">Carregando...</div>
+        </div>
+    );
+  }
+
+  if (error) {
+    return (
+        <div className="bg-gray-100 min-h-screen">
+            <div className="text-center py-20 text-red-600 font-semibold">{error}</div>
+        </div>
+    );
+  }
+
   return (
     <div className="bg-gray-100 min-h-screen">
-      <Navbar />
-
       <header className="bg-white shadow-sm">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Bem-vindo de volta, João!</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Bem-vindo de volta, {user?.nome || 'Usuário'}!</h1>
           <p className="text-gray-600">Aqui está um resumo das suas atividades recentes</p>
         </div>
       </header>
-      
       <main>
         <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-6">
-            
-            <SearchProfessionals />
-
+            <SearchProfessionals onSearch={searchProfessionals} />
             <UpcomingAppointments />
-
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <FeaturedProfessionals />
+              <FeaturedProfessionals professionals={professionals} />
               <TipOfTheDay />
             </div>
-
           </div>
         </div>
       </main>

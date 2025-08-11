@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useCadastroForm } from "../../hooks/useCadastroForm";
+import { useCadastroForm } from "../../../../Front/src/hooks/useCadastroForm";
 import { PersonalInfoStep } from "../cadastro/Paciente/PersonalInfoStep";
 import { PatientInfoStep } from "../cadastro/Paciente/PacienteInfoStep";
 import { SecurityStep } from "../cadastro/SecurityStep";

@@ -32,11 +32,11 @@ export default function DashboardPage() {
         </div>
       </header>
       <main>
-        <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
-          <div className="flex flex-col gap-6">
+        <div className="mx-auto max-w-7xl py-8 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-8">
             <SearchProfessionals onSearch={searchProfessionals} />
             <UpcomingAppointments />
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <FeaturedProfessionals professionals={professionals} />
               <TipOfTheDay />
             </div>

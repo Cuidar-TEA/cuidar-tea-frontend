@@ -1,54 +1,64 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import BlocoProfissional from './BlocoProfissional';
 import BlocoSobreLocalizacaoAvaliacoes from './BlocoSobreLocalizacaoAvaliacoes';
 import BlocoAgendamento from './BlocoAgendamento';
+import api from '../../services/api'; 
 
 const ProfissionalPage: React.FC = () => {
     const location = useLocation();
     const { id } = useParams<{ id: string }>();
-    
-    // Pega os dados do profissional passados via state
-    const profissionalData = location.state?.profissional;
+    const [profissional, setProfissional] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
 
-    // Se não há dados passados via state, você pode fazer uma busca por ID aqui
-    if (!profissionalData) {
-        return (
-            <>
-                <div className="mt-10 ml-40 text-center">
-                    <p className="text-gray-600">Carregando dados do profissional...</p>
-                    <p className="text-sm text-gray-400">ID: {id}</p>
-                </div>
-            </>
-        );
-    }
+    useEffect(() => {
+        async function fetchProfissional() {
+            setLoading(true);
+            try {
+                const res = await api.get(`/api/profissionais/buscar`, {
+                    params: { id_profissional: id }
+                });
+                setProfissional(res.data[0]); // supondo que retorna array
+            } catch (err) {
+                setProfissional(null);
+            } finally {
+                setLoading(false);
+            }
+        }
+        if (id) fetchProfissional();
+    }, [id]);
 
-    const agendamentosSeguros = profissionalData.agendamentos || [];
+    if (loading) return <div>Carregando...</div>;
+    if (!profissional) return <div className="bg-white p-6 rounded-xl shadow text-center">Profissional não encontrado.</div>;
+
+    const agendamentosSeguros = profissional.agendamentos || [];
 
     const profissionalFormatado = {
-        id: profissionalData.id_profissional.toString(),
-        nome: profissionalData.nome,
-        especialidade: `${profissionalData.tipo_registro} ${profissionalData.numero_registro}`,
+        id: profissional.id_profissional.toString(),
+        nome: profissional.nome,
+        especialidade: `${profissional.tipo_registro} ${profissional.numero_registro}`,
         
         avaliacao: agendamentosSeguros.length > 0 
             ? agendamentosSeguros.reduce((acc: number, ag: any) => acc + (ag.nota_atendimento || 0), 0) / agendamentosSeguros.length 
             : 0,
         totalAvaliacoes: agendamentosSeguros.length,
 
-        preco: parseFloat(profissionalData.valor_consulta) || 0,
-        foto: profissionalData.foto_perfil_url || '',
-        especialidades: profissionalData.profissional_especialidades.map((pe: any) => pe.especialidades.nome_especialidade),
-        descricao: profissionalData.descricao || '',
-        cidade: profissionalData.enderecos?.cidade || '',
-        estado: profissionalData.enderecos?.estado || '',
-        aceita_convenio: profissionalData.aceita_convenio || false,
-        atende_domicilio: profissionalData.atende_domicilio === 1,
+        preco: parseFloat(profissional.valor_consulta) || 0,
+        foto: profissional.foto_perfil_url || '',
+        especialidades: Array.isArray(profissional.profissional_especialidades)
+  ? profissional.profissional_especialidades.map((pe: any) => pe.especialidades.nome_especialidade)
+  : [],
+        descricao: profissional.descricao || '',
+        cidade: profissional.enderecos?.cidade || '',
+        estado: profissional.enderecos?.estado || '',
+        aceita_convenio: profissional.aceita_convenio || false,
+        atende_domicilio: profissional.atende_domicilio === 1,
         endereco: {
-            logradouro: profissionalData.enderecos?.logradouro || '',
-            numero: profissionalData.enderecos?.numero || '',
-            bairro: profissionalData.enderecos?.bairro || '',
-            cep: profissionalData.enderecos?.cep || '',
-            complemento: profissionalData.enderecos?.complemento || ''
+            logradouro: profissional.enderecos?.logradouro || '',
+            numero: profissional.enderecos?.numero || '',
+            bairro: profissional.enderecos?.bairro || '',
+            cep: profissional.enderecos?.cep || '',
+            complemento: profissional.enderecos?.complemento || ''
         }
     };
 
@@ -58,19 +68,19 @@ const ProfissionalPage: React.FC = () => {
 
     // Dados específicos para o BlocoSobreLocalizacaoAvaliacoes
     const dadosDetalhados = {
-        id: profissionalData.id_profissional.toString(),
-        nome: profissionalData.nome,
-        descricao: profissionalData.descricao || '',
-        cidade: profissionalData.enderecos?.cidade || '',
-        estado: profissionalData.enderecos?.estado || '',
+        id: profissional.id_profissional.toString(),
+        nome: profissional.nome,
+        descricao: profissional.descricao || '',
+        cidade: profissional.enderecos?.cidade || '',
+        estado: profissional.enderecos?.estado || '',
         endereco: {
-            logradouro: profissionalData.enderecos?.logradouro || '',
-            numero: profissionalData.enderecos?.numero || '',
-            bairro: profissionalData.enderecos?.bairro || '',
-            cep: profissionalData.enderecos?.cep || '',
-            complemento: profissionalData.enderecos?.complemento || ''
+            logradouro: profissional.enderecos?.logradouro || '',
+            numero: profissional.enderecos?.numero || '',
+            bairro: profissional.enderecos?.bairro || '',
+            cep: profissional.enderecos?.cep || '',
+            complemento: profissional.enderecos?.complemento || ''
         },
-        agendamentos: profissionalData.agendamentos || []
+        agendamentos: profissional.agendamentos || []
     };
 
     return (

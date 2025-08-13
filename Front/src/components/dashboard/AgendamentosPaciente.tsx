@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
 interface Consulta {
-  id: number;
-  data: string;
-  paciente: string;
-  profissional: string;
+  data_formatada: string;
+  especialidade: string;
+  id_agendamento: number;
+  nome_profissional: string;
   status: string;
 }
 
@@ -25,7 +25,7 @@ export default function ConsultasRecentes() {
 
         const res = await fetch("http://localhost:3000/api/agendamentos/proximos", {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json"
           },
         });
@@ -41,11 +41,10 @@ export default function ConsultasRecentes() {
         }
 
         const data: Consulta[] = await res.json();
+        console.log("data recebida:", data);
 
-        const futuras = data
-          .filter((c) => new Date(c.data) >= new Date())
-          .sort((a, b) => new Date(a.data).getTime() - new Date(b.data).getTime())
-          .slice(0, 4);
+        const futuras = data.slice(0, 4);
+        console.log("futuras:", futuras);
 
         setConsultas(futuras);
       } catch (err) {
@@ -83,20 +82,16 @@ export default function ConsultasRecentes() {
       <ul className="space-y-3">
         {consultas.map((consulta) => (
           <li
-            key={consulta.id}
+            key={consulta.id_agendamento}
             className="flex justify-between items-center p-4 border rounded-lg hover:bg-gray-50 transition"
           >
             <div>
-              <p className="font-medium">{consulta.paciente}</p>
-              <p className="text-sm text-gray-500">{consulta.profissional}</p>
+              <p className="font-medium">{consulta.nome_profissional}</p>
+              <p className="text-sm text-gray-500">{consulta.especialidade}</p>
             </div>
             <div className="text-right">
               <p className="text-sm font-semibold">
-                {new Date(consulta.data).toLocaleDateString("pt-BR", {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                })}
+                {consulta.data_formatada}
               </p>
               <p className="text-xs text-gray-400">{consulta.status}</p>
             </div>

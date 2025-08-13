@@ -16,14 +16,14 @@ export function useDashboardData() {
             const token = localStorage.getItem('authToken');
             const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-            const [userResponse, appointmentsResponse, /*professionalsResponse*/] = await Promise.all([
+            const [userResponse, appointmentsResponse, professionalsResponse] = await Promise.all([
                 api.get('/usuarios/me', { headers }),
                 api.get('/agendamentos/proximos', { headers }),
-                //api.get('/profissionais/destaques', { headers })
+                api.get('/profissionais/destaques', { headers })
             ]);
             setUser(userResponse.data);
             setAppointments(appointmentsResponse.data);
-            //setProfessionals(professionalsResponse.data);
+            setProfessionals(professionalsResponse.data);
         } catch (err) {
             setError('Não foi possível carregar os dados da dashboard.');
         } finally {

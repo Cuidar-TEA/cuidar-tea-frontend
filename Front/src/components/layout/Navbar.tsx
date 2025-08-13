@@ -25,8 +25,9 @@ export default function Navbar() {
           {/* Left */}
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <h1 className="text-white font-extrabold text-xl tracking-tight">
-                <span className="text-white">TEA</span> <span className="text-rose-400">Connect</span>
+              <h1 className="text-xl font-extrabold tracking-tight">
+                <span className="text-white">TEA</span>
+                <span className="text-white">Connect</span>
               </h1>
             </div>
             <div className="hidden md:block">

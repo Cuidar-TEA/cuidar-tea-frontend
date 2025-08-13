@@ -16,13 +16,15 @@ export interface Appointment {
 }
 
 export interface Profissional {
-  id: number;
+  id_profissional: number;
   nome: string;
-  especialidade: string;
-  estrelas: number;
-  avaliacoes: number;
-  local: string;
-  horario: string;
-  preco: string;
-  disponivel: boolean;
+  especialidade?: string;
+  avaliacao_media?: number;
+  total_avaliacoes?: number;
+  cidade?: string;
+  estado?: string;
+  formacao?: string;
+  foto_perfil_url?: string | null;
+  proxima_disponibilidade?: string;
+  valor_consulta?: number | null;
 }

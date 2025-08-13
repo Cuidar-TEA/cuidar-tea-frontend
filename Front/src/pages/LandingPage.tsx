@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
-import Slider from 'react-slick';
+import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
-import { FaUsers, FaSearch, FaRegCalendarCheck } from 'react-icons/fa';
+import { FaUsers, FaUserMd, FaSearch, FaRegCalendarCheck } from 'react-icons/fa';
+import { useEffect, useState } from "react";
 
 
 const Navbar = () => (
@@ -27,30 +28,59 @@ const Navbar = () => (
     </nav>
 );
 
-const HeroSection = () => (
-    <section id="inicio" className="pt-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div className="flex flex-col md:flex-row items-center">
-                <div className="md:w-1/2 text-center md:text-left">
-                    <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 leading-tight">
+const heroImages = [
+    "/img/1.webp",
+    "/img/2.webp",
+    "/img/3.webp"
+    // Adicione mais imagens conforme desejar
+];
+
+const HeroSection = () => {
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 600,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 3500,
+        arrows: false,
+        pauseOnHover: true
+    };
+
+    return (
+        <section id="inicio" className="pt-24 bg-gray-50">
+            <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-4">
+                <div className="flex-1 mb-8 md:mb-0">
+                    <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
                         Conectando famílias e profissionais pelo bem-estar no espectro autista.
                     </h1>
-                    <p className="mt-4 text-lg text-gray-600">
+                    <p className="text-lg text-gray-700 mb-6">
                         Encontre os melhores especialistas, agende consultas e tenha acesso a uma rede de apoio completa e humanizada.
                     </p>
-                    <Link to="/dashboard" className="mt-8 inline-block px-8 py-3 text-lg font-semibold text-white bg-red-600 rounded-full hover:bg-red-700 shadow-lg">
+                    <button className="bg-red-600 text-white px-6 py-3 rounded-full shadow hover:bg-red-700 transition">
                         Buscar profissionais
-                    </Link>
+                    </button>
                 </div>
-                <div className="md:w-1/2 mt-10 md:mt-0">
-                    <div className="w-full h-80 bg-gray-200 rounded-lg flex items-center justify-center">
-                        <span className="text-gray-500"></span>
+                <div className="flex-1 flex justify-center mt-8">
+                    <div className="w-full max-w-md">
+                        <Slider {...settings}>
+                            {heroImages.map((src, idx) => (
+                                <div key={idx}>
+                                    <img
+                                        src={src}
+                                        alt={`Ilustração ${idx + 1}`}
+                                        className="w-full h-72 object-cover rounded-xl shadow-lg bg-gray-200"
+                                    />
+                                </div>
+                            ))}
+                        </Slider>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-);
+        </section>
+    );
+};
 
 const CarouselSection = () => {
     const settings = {
@@ -121,6 +151,61 @@ const HowItWorksSection = () => (
     </section>
 );
 
+const StatisticsSection = () => {
+    const [stats, setStats] = useState({
+        profissionais: 0,
+        pacientes: 0,
+        consultas: 0,
+        loading: true
+    });
+
+    useEffect(() => {
+        async function fetchStats() {
+            try {
+                const res = await fetch("http://localhost:3000/api/estatisticas/home");
+                const data = await res.json();
+                setStats({
+                    profissionais: data.quantidadeProfissionais || 0,
+                    pacientes: data.quantidadePacientes || 0,
+                    consultas: data.mediaAvaliacoes || 0,
+                    loading: false
+                });
+            } catch {
+                setStats(s => ({ ...s, loading: false }));
+            }
+        }
+        fetchStats();
+    }, []);
+
+    return (
+        <section className="w-full bg-gradient-to-r from-[#f8f8f8] to-[#ffffff] py-12">
+            <div className="max-w-5xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-3 gap-8">
+                <div className="bg-white rounded-2xl shadow-lg flex flex-col items-center py-8 px-4">
+                    <FaUserMd className="text-4xl text-red-500 mb-2" />
+                    <span className="text-3xl font-bold text-gray-800">
+                        {stats.loading ? "..." : stats.profissionais}
+                    </span>
+                    <span className="text-gray-500 mt-1">Profissionais</span>
+                </div>
+                <div className="bg-white rounded-2xl shadow-lg flex flex-col items-center py-8 px-4">
+                    <FaUsers className="text-4xl text-emerald-500 mb-2" />
+                    <span className="text-3xl font-bold text-gray-800">
+                        {stats.loading ? "..." : stats.pacientes}
+                    </span>
+                    <span className="text-gray-500 mt-1">Usuários</span>
+                </div>
+                <div className="bg-white rounded-2xl shadow-lg flex flex-col items-center py-8 px-4">
+                    <FaRegCalendarCheck className="text-4xl text-yellow-500 mb-2" />
+                    <span className="text-3xl font-bold text-gray-800">
+                        {stats.loading ? "..." : stats.consultas}
+                    </span>
+                    <span className="text-gray-500 mt-1">Média de avaliações</span>
+                </div>
+            </div>
+        </section>
+    );
+};
+
 
 export default function LandingPage() {
     return (
@@ -130,6 +215,7 @@ export default function LandingPage() {
                 <HeroSection />
                 <CarouselSection />
                 <HowItWorksSection />
+                <StatisticsSection />
             </main>
         </div>
     );

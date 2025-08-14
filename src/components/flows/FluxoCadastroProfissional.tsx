@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useProfissionalForm } from "../../hooks/useProfissionalForm";
 import { ProfessionalPersonalInfoStep } from '../cadastro/Profissional/ProfessionalPersonalInfoStep';
 import { ProfessionalDetailsStep } from '../cadastro/Profissional/ProfessionalDetailsStep';

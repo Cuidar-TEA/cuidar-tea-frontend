@@ -1,14 +1,18 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { FaUserCircle, FaBars, FaTimes } from 'react-icons/fa';
 import { useState } from 'react';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function Navbar() {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isCliente, isProfissional } = useAuth();
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userType');
+    // Dispatch evento customizado para notificar outras partes da aplicação
+    window.dispatchEvent(new Event('authChanged'));
     navigate('/login');
   };
 
@@ -37,18 +41,42 @@ export default function Navbar() {
                 >
                   Dashboard
                 </NavLink>
-                <NavLink 
-                  to="/profissionais" 
-                  className={({ isActive }) => isActive ? activeLink : inactiveLink}
-                >
-                  Profissionais
-                </NavLink>
-                <NavLink 
-                  to="/consultas" 
-                  className={({ isActive }) => isActive ? activeLink : inactiveLink}
-                >
-                  Consultas
-                </NavLink>
+                
+                {/* Links para pacientes/famílias */}
+                {isCliente && (
+                  <>
+                    <NavLink 
+                      to="/profissionais" 
+                      className={({ isActive }) => isActive ? activeLink : inactiveLink}
+                    >
+                      Profissionais
+                    </NavLink>
+                    <NavLink 
+                      to="/consultas" 
+                      className={({ isActive }) => isActive ? activeLink : inactiveLink}
+                    >
+                      Minhas Consultas
+                    </NavLink>
+                  </>
+                )}
+
+                {/* Links para profissionais */}
+                {isProfissional && (
+                  <>
+                    <NavLink 
+                      to="/profissionais" 
+                      className={({ isActive }) => isActive ? activeLink : inactiveLink}
+                    >
+                      Profissionais
+                    </NavLink>
+                    <NavLink 
+                      to="/profissional/consultas" 
+                      className={({ isActive }) => isActive ? activeLink : inactiveLink}
+                    >
+                      Meus Atendimentos
+                    </NavLink>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -95,20 +123,46 @@ export default function Navbar() {
             >
               Dashboard
             </NavLink>
-            <NavLink 
-              to="/profissionais" 
-              className={({ isActive }) => isActive ? mobileActiveLink : mobileInactiveLink}
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Profissionais
-            </NavLink>
-            <NavLink 
-              to="/consultas" 
-              className={({ isActive }) => isActive ? mobileActiveLink : mobileInactiveLink}
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Consultas
-            </NavLink>
+            
+            {/* Links mobile para pacientes/famílias */}
+            {isCliente && (
+              <>
+                <NavLink 
+                  to="/profissionais" 
+                  className={({ isActive }) => isActive ? mobileActiveLink : mobileInactiveLink}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Profissionais
+                </NavLink>
+                <NavLink 
+                  to="/consultas" 
+                  className={({ isActive }) => isActive ? mobileActiveLink : mobileInactiveLink}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Minhas Consultas
+                </NavLink>
+              </>
+            )}
+
+            {/* Links mobile para profissionais */}
+            {isProfissional && (
+              <>
+                <NavLink 
+                  to="/profissionais" 
+                  className={({ isActive }) => isActive ? mobileActiveLink : mobileInactiveLink}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Profissionais
+                </NavLink>
+                <NavLink 
+                  to="/profissional/consultas" 
+                  className={({ isActive }) => isActive ? mobileActiveLink : mobileInactiveLink}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Meus Atendimentos
+                </NavLink>
+              </>
+            )}
           </div>
           
           {/* Mobile user menu */}

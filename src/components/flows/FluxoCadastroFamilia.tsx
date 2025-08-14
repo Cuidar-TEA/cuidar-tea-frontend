@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom"; // Não está sendo usado
 import { useCadastroForm } from "../../hooks/useCadastroForm";
 import { PersonalInfoStep } from "../cadastro/Paciente/PersonalInfoStep";
 import { PatientInfoStep } from "../cadastro/Paciente/PacienteInfoStep";

@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
-import type { User, Appointment, Profissional } from '../types';
+import type { User, Appointment } from '../types';
 
 export function useDashboardData() {
     const [user, setUser] = useState<User | null>(null);
     const [appointments, setAppointments] = useState<Appointment[]>([]);
-    const [professionals, setProfessionals] = useState<Profissional[]>([]);
+    // const [professionals, setProfessionals] = useState<Profissional[]>([]); // Não está sendo usado
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -34,5 +34,5 @@ export function useDashboardData() {
         fetchData();
     }, []);
 
-    return { user, appointments, professionals, loading, error };
+    return { user, appointments, loading, error };
 }

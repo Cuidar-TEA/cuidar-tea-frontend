@@ -23,7 +23,7 @@ export const agendamentosService = {
     }
   },
 
-  // Buscar agendamentos do usuário logado
+  // Buscar agendamentos do usuário logado (paciente)
   buscarMeusAgendamentos: async (): Promise<any[]> => {
     try {
       console.log('🔍 Buscando agendamentos do usuário...');
@@ -32,6 +32,53 @@ export const agendamentosService = {
       return response.data;
     } catch (error) {
       console.error('❌ Erro ao buscar agendamentos:', error);
+      throw error;
+    }
+  },
+
+  // Buscar agendamentos do profissional logado
+  buscarMeusAgendamentosProfissional: async (): Promise<any[]> => {
+    try {
+      console.log('🔍 Buscando pacientes ativos do profissional...');
+      const response = await api.get('/profissionais/pacientes-ativos');
+      console.log('✅ Pacientes ativos recebidos:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Erro ao buscar pacientes ativos:', error);
+      throw error;
+    }
+  },
+
+  // Atualizar status de uma consulta
+  atualizarStatusConsulta: async (consultaId: number, novoStatus: string): Promise<any> => {
+    try {
+      console.log(`🔄 Atualizando status da consulta ${consultaId} para: ${novoStatus}`);
+      // Primeiro vamos tentar o endpoint mais comum
+      const response = await api.patch(`/agendamentos/${consultaId}/status`, { 
+        status: novoStatus 
+      });
+      console.log('✅ Status atualizado:', response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error('❌ Erro ao atualizar status da consulta:', error);
+      console.error('📋 Response status:', error.response?.status);
+      console.error('📋 Response data:', error.response?.data);
+      
+      // Se o endpoint não existir, vamos tentar uma alternativa
+      if (error.response?.status === 404) {
+        console.log('🔄 Tentando endpoint alternativo...');
+        try {
+          const responseAlt = await api.put(`/agendamentos/${consultaId}`, { 
+            status: novoStatus 
+          });
+          console.log('✅ Status atualizado (endpoint alternativo):', responseAlt.data);
+          return responseAlt.data;
+        } catch (errorAlt) {
+          console.error('❌ Erro também no endpoint alternativo:', errorAlt);
+          throw errorAlt;
+        }
+      }
+      
       throw error;
     }
   },

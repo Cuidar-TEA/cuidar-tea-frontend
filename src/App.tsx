@@ -14,6 +14,7 @@ import DashboardPage from "./pages/DashboardPage";
 import SearchResultsPage from "./pages/PesquisaProfissionalPage/PesquisaProfissionalPage";
 import ProfissionalPage from "./pages/ProfissionalPage/ProfissionalPage";
 import ConsultasPage from "./pages/ConsultasPage";
+import ConsultasProfissionalPage from "./pages/ConsultasProfissionalPage";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
               <Route path="/profissionais" element={<SearchResultsPage />} />
               <Route path="/profissional/:id" element={<ProfissionalPage />} />
               <Route path="/consultas" element={<ConsultasPage />} />
+              <Route path="/profissional/consultas" element={<ConsultasProfissionalPage />} />
               {/* Adicione aqui futuras páginas privadas, como /perfil, /minhas-consultas, etc. */}
             </Route>
           </Route>

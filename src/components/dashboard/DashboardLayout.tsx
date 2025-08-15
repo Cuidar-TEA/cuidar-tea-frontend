@@ -1,32 +1,38 @@
-import WelcomeSection from "./WelcomeSection";
-import SearchProfessionals from "./SearchProfessionals";
-import UpcomingAppointments from "./UpcomingAppointments";
-import FeaturedProfessionals from "./FeaturedProfessionals";
-import DailyTip from "./DailyTip";
-import { useDashboardData } from "../../hooks/useDashboardData";
+import { useNavigate } from 'react-router-dom';
+import FeaturedProfessionals from './FeaturedProfessionals';
+import SearchProfessionals from './SearchProfessionals';
+import TipOfTheDay from './DailyTip';
+import UpcomingAppointments from './AgendamentosPaciente';
+import type { Appointment, Profissional } from '../../types';
 
-export default function DashboardLayout() {
-  const { user, appointments, professionals, loading, error } = useDashboardData();
+interface LayoutProps {
+    appointments: Appointment[];
+    professionals: Profissional[];
+}
 
-  if (loading) {
-    return <div className="text-center py-10 text-gray-600">Carregando dados...</div>;
-  }
+export default function DashboardLayout({ professionals }: LayoutProps) {
+    const navigate = useNavigate();
 
-  if (error) {
-    return <div className="text-center py-10 text-red-600">{error}</div>;
-  }
+    const handleDashboardSearch = (filtros: { q?: string; especialidade?: string }) => {
+        const queryParams = new URLSearchParams({
+            q: filtros.q || '',
+            especialidade: filtros.especialidade || ''
+        }).toString();
+        navigate(`/profissionais?${queryParams}`);
+    };
 
-  return (
-    <main className="bg-gray-100 min-h-screen p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <WelcomeSection name={user?.nome ?? "Usuário"} />
-        <SearchProfessionals />
-        <UpcomingAppointments appointments={appointments} />
-        <section className="grid md:grid-cols-3 gap-6">
-          <FeaturedProfessionals professionals={professionals} />
-          <DailyTip />
-        </section>
-      </div>
-    </main>
-  );
+    return (
+        <div className="flex flex-col gap-6">
+            <SearchProfessionals onSearch={handleDashboardSearch} />
+            
+            <UpcomingAppointments />
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2">
+                    <FeaturedProfessionals professionals={professionals} />
+                </div>
+                <TipOfTheDay />
+            </div>
+        </div>
+    );
 }

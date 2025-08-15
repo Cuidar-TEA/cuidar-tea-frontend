@@ -5,7 +5,7 @@ const MainLayout = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       <Navbar />
-      <main className="relative z-10">
+      <main>
         <Outlet />
       </main>
     </div>
